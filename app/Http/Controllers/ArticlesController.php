@@ -21,53 +21,61 @@ class ArticlesController extends Controller
         $data = [
             "title" => "My Test Article",
             "subtitle" => "a test to see how we'd enable block based content",
-            "hero" => "https://picsum.photos/1024/480",
+            //"hero" => "https://picsum.photos/1024/480",
 
             "content" => [
                 [
                     "id" => "e6f7e7",
                     "type" => "Header",
                     "props" => [
-                        "content" => "Introduction"
+                        "type" => "h2",
+                        "text" => "Introduction"
                     ]
                 ],
                 [
                     "id" => "5e6613",
-                    "type" => "Wysiwyg",
+                    "type" => "RichText",
                     "props" => [
                         "content" => "<p>lorem ipsum <a href=\"https://www.google.com\">link here</a> and then some additional content.</p>"
                     ]
                 ],
                 [
-                    "id" => "djj37s",
-                    "type" => "Image",
+                    "id" => "udj383",
+                    "type" => "Example",
                     "props" => [
-                        "alt" => "My rad image",
-                        "uri" => "https://picsum.photos/640/480?random=1"
-                    ]
-                ],
-                [
-                    "id" => "dhsy46",
-                    "type" => "Accordion",
-                    "props" => [
-                        "title" => "My Sweet accordion",
-                        "items" => [
-                            [
-                                "title" => "One",
-                                "body" => "dsjkdsajsad adksad adsa"
-                            ],
-                            [
-                                "title" => "Two",
-                                "body" => "Jai"
-                            ],
-                        ]
+                        "value" => "Some text"
                     ]
                 ]
+                // [
+                //     "id" => "djj37s",
+                //     "type" => "Image",
+                //     "props" => [
+                //         "alt" => "My rad image",
+                //         "uri" => "https://picsum.photos/640/480?random=1"
+                //     ]
+                // ],
+                // [
+                //     "id" => "dhsy46",
+                //     "type" => "Accordion",
+                //     "props" => [
+                //         "title" => "My Sweet accordion",
+                //         "items" => [
+                //             [
+                //                 "title" => "One",
+                //                 "body" => "dsjkdsajsad adksad adsa"
+                //             ],
+                //             [
+                //                 "title" => "Two",
+                //                 "body" => "Jai"
+                //             ],
+                //         ]
+                //     ]
+                // ]
             ]
         ];
 
-        return Inertia::render('Article', [
-            "data" => $data
+        return Inertia::render('ArticleTest', [
+            "defaultData" => $data
         ]);
     }
 }
