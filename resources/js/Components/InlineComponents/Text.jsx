@@ -23,8 +23,7 @@ const View = ({
 }) => {
   return <div id={id} dangerouslySetInnerHTML={{__html: content}} />
 }
-
-
+  
 export default function Text({
   id,
   content, 

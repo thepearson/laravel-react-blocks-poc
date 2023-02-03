@@ -21,21 +21,33 @@ const components = {
   templates: {
     Header: {
       type: "h2",
-      text: ""
+      text: "placeholder"
     },
     Text: {
-      content: ""
+      content: "placeholder"
     },
     RichText: {
-      content: ""
+      content: "placeholder"
     }
   }
 }
 
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 
 const Toolbar = ({
   index,
-  length
+  length,
+  handleInsert
 }) => {
   const [showOptions, setShowOptions] = useState(false)
   const buttonClasses = classNames([
@@ -48,8 +60,13 @@ const Toolbar = ({
     "text-white"
   ]);
 
-  const insert = () => {
+  const insert = (component, i) => {
     setShowOptions(false)
+    handleInsert(i, {
+      id: makeid(6),
+      type: component,
+      props: {...components.templates[component]}
+    })
   }
 
   return (<><div className="flex justify-between relative">
@@ -59,7 +76,7 @@ const Toolbar = ({
     {showOptions && <div className="absolute top-6 bg-white border-2">
       <ul>
       {components.enabled.map((component, i) => 
-        <li key={i} className="hover:bg-slate-200 px-2 py-1"><button type="button" onClick={insert}>{component}</button></li>
+        <li key={i} className="hover:bg-slate-200 px-2 py-1"><button type="button" onClick={() => insert(component, index)}>{component}</button></li>
       )}
       </ul>
     </div>}
@@ -67,7 +84,6 @@ const Toolbar = ({
   <hr className="mb-4 mt-4" />
   </>)
 }
-
 
 export default function ArticleTest({}) {
   const [edit, setEdit] = useState(false)
@@ -116,10 +132,23 @@ export default function ArticleTest({}) {
             props: value
           }
         }
-
         return block;
       })
     })
+  }
+
+  const insertBlock = (index, newBlock) => {
+    const components = []
+    for (let i = 0; i < data.content.length; i++) {
+      components.push({...data.content[i]})
+      if (i == index) {
+        components.push(newBlock)
+      }
+    }
+
+    const newData = {title: data.title, subtitle: data.subtitle, content: components};
+    console.log(newData)
+    setData(newData)
   }
 
   return (
@@ -144,7 +173,7 @@ export default function ArticleTest({}) {
               edit={edit}
               handleUpdate={handleUpdate} 
               {...block.props} />
-            {edit && <Toolbar index={index} length={data.content.length} />}
+            {edit && <Toolbar index={index} length={data.content.length} handleInsert={insertBlock} />}
           </div>)
         })}   
       </div>
