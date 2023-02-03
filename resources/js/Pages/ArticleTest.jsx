@@ -4,7 +4,8 @@ import Header from '@/Components/InlineComponents/Header'
 import Text from '@/Components/InlineComponents/Text'
 import RichText from '@/Components/InlineComponents/RichText'
 
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaTrash } from 'react-icons/fa'
+import { BsFillCaretDownFill, BsFillCaretUpFill } from 'react-icons/bs';
 import classNames from 'classnames'
 
 const components = {
@@ -47,14 +48,14 @@ function makeid(length) {
 const Toolbar = ({
   index,
   length,
-  handleInsert
+  handleInsert,
+  handleRemove
 }) => {
   const [showOptions, setShowOptions] = useState(false)
   const buttonClasses = classNames([
     "border-2",
     "text-xs",
     "border-slate-600",
-    "bg-slate-500",
     "px-4",
     "py-1",
     "text-white"
@@ -69,10 +70,12 @@ const Toolbar = ({
     })
   }
 
-  return (<><div className="flex justify-between relative">
-    {/* <div>{index > 0 && <button className={buttonClasses} type="button">Move up</button>}</div> */}
-    <div><button onClick={() => setShowOptions(!showOptions)} className={buttonClasses} type="button"><FaPlus /></button></div>
-    {/* <div>{index < (length - 1) && <button className={buttonClasses} type="button">Move down</button>}</div> */}
+  return (<><div className="flex justify-end relative">
+    <div>{index > 0 && <button className={`${buttonClasses} bg-green-500 text-slate-800`} type="button"><BsFillCaretUpFill /></button>}</div>
+    <div>{index < (length - 1) && <button className={`${buttonClasses} bg-green-500 text-slate-800`} type="button"><BsFillCaretDownFill /></button>}</div>
+    <div><button onClick={() => setShowOptions(!showOptions)} className={`${buttonClasses} bg-slate-500`} type="button"><FaPlus /></button></div>
+    <div><button onClick={() => handleRemove(index)} className={`${buttonClasses} bg-red-500`} type="button"><FaTrash /></button></div>
+    
     {showOptions && <div className="absolute top-6 bg-white border-2">
       <ul>
       {components.enabled.map((component, i) => 
@@ -145,10 +148,11 @@ export default function ArticleTest({}) {
         components.push(newBlock)
       }
     }
+    setData({title: data.title, subtitle: data.subtitle, content: components})
+  }
 
-    const newData = {title: data.title, subtitle: data.subtitle, content: components};
-    console.log(newData)
-    setData(newData)
+  const removeBlock = (index) => {
+    setData({title: data.title, subtitle: data.subtitle, content: [...data.content.slice(0, index), ...data.content.slice(index + 1)]})
   }
 
   return (
@@ -173,7 +177,12 @@ export default function ArticleTest({}) {
               edit={edit}
               handleUpdate={handleUpdate} 
               {...block.props} />
-            {edit && <Toolbar index={index} length={data.content.length} handleInsert={insertBlock} />}
+            {edit && 
+              <Toolbar 
+                index={index} 
+                length={data.content.length} 
+                handleInsert={insertBlock}
+                handleRemove={removeBlock} />}
           </div>)
         })}   
       </div>
